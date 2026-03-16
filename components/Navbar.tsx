@@ -60,22 +60,25 @@ export default function Navbar() {
         {/* Sidebar Content */}
         <div className="absolute right-0 h-full w-64 bg-white shadow-xl p-8 flex flex-col gap-6">
           <button onClick={() => setIsOpen(false)} className="self-end text-gray-400 font-bold uppercase text-xs">Close ✕</button>
-          
           <div className="flex flex-col gap-8 mt-10">
-            {navLinks.map((link) => (
+            {navLinks.map((link, index) => (
               <Link 
                 key={link.href}
                 href={link.href} 
                 onClick={() => setIsOpen(false)}
-                className={`text-2xl font-bold uppercase ${pathname === link.href ? 'text-orange-500' : 'text-gray-800'}`}
-              >
-                {link.name}
+                style={{
+                  transitionDelay: isOpen ? `${index * 100}ms` : '0ms'
+                }}
+                className={`text-3xl font-heading font-bold uppercase transition-all duration-500 transform ${
+                isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
+                } ${pathname === link.href ? 'text-orange-500' : 'text-gray-800'}`}>
+        {link.name}
               </Link>
             ))}
           </div>
           
           <div className="mt-auto border-t pt-6">
-            <p className="text-xs text-gray-400 uppercase tracking-widest text-center italic">Mom's Stall Accra</p>
+            <p className="text-xs text-gray-400 uppercase tracking-widest text-center italic">Kamara's Special</p>
           </div>
         </div>
       </div>
