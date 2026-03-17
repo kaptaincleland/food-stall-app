@@ -21,7 +21,7 @@ export default function Navbar() {
         {/* LOGO */}
         <Link href="/" className="flex items-center gap-2">
           <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center text-white font-bold">K</div>
-          <span className="font-bold text-xl tracking-tight text-gray-800 uppercase">
+          <span className="font-bold text-base lg:text-xl tracking-tight text-gray-800 uppercase">
             KAMARA's <span className="text-orange-500">SPECIAL</span>
           </span>
         </Link>
@@ -69,7 +69,7 @@ export default function Navbar() {
                 style={{
                   transitionDelay: isOpen ? `${index * 100}ms` : '0ms'
                 }}
-                className={`text-3xl font-heading font-bold uppercase transition-all duration-500 transform ${
+                className={`text-xl font-heading font-bold uppercase transition-all duration-500 transform ${
                 isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
                 } ${pathname === link.href ? 'text-orange-500' : 'text-gray-800'}`}>
         {link.name}
