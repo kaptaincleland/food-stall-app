@@ -1,5 +1,5 @@
 import './globals.css'
-import { Oswald, Montserrat } from 'next/font/google' // Import Oswald
+import { Oswald, Montserrat } from 'next/font/google'
 import Navbar from '@/components/Navbar'
 
 //font variables
