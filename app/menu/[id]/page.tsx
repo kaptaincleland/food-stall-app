@@ -6,16 +6,20 @@ export default async function CategoryPage({ params }: { params: { id: string } 
   const { id } = await params
   const supabase = await createClient()
 
-  // Fetch only items belonging to this category
+  // Fetching menu items from db
   const { data: items, error } = await supabase
     .from('menu_items')
     .select('*')
     .eq('category_slug', id) 
     .order('price', { ascending: false })
-    console.log("Looking for category:", id)
-    console.log("Found items:", items?.length)
-    if (error) console.log("Database Error:", error.message)
 
+  //fetching extras for db
+  const { data: extras, error: extrasError } = await supabase
+    .from('category_extras')
+    .select('food_extras(id,name,price)')
+    .eq('category_slug', id)
+
+  const availableExtras = extras? extras.map((e: any) => e.food_extras).filter(Boolean) .sort((a: any, b: any) => a.price - b.price): [];
   return (
     <main className="p-6 md:p-12">
       <div className="max-w-7xl mx-auto">
@@ -28,8 +32,13 @@ export default async function CategoryPage({ params }: { params: { id: string } 
         </h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Only use ONE map here and pass the extras correctly */}
           {items?.map((item) => (
-            <FoodCard key={item.id} item={item} />
+            <FoodCard 
+              key={item.id} 
+              item={item} 
+              dbExtras={availableExtras} 
+            />
           ))}
         </div>
       </div>
