@@ -1,57 +1,46 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 
-interface CartItem {
+export type CartItem = {
   id: string
   name: string
   price: number
-  quantity: number
   image_url?: string
+  quantity: number
+  category_slug: string
 }
 
 interface CartState {
   cart: CartItem[]
-  addToCart: (item: any) => void
+  addToCart: (item: CartItem) => void
   removeFromCart: (id: string) => void
   clearCart: () => void
-  totalPrice: () => number
 }
 
-export const useCartStore = create<CartState>((set, get) => ({
-  cart: [],
+export const useCartStore = create<CartState>()(
+  persist(
+    (set) => ({
+      cart: [],
+      addToCart: (newItem) =>
+        set((state) => {
+          // Check if the exact same item (with same extras/name) exists
+          const existingItemIndex = state.cart.findIndex(
+            (item) => item.name === newItem.name && item.id === newItem.id
+          )
 
-  addToCart: (item) => {
-    const currentCart = get().cart
-    const existingItem = currentCart.find((i) => i.id === item.id)
-
-    if (existingItem) {
-      set({
-        cart: currentCart.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
-        ),
-      })
-    } else {
-      set({ cart: [...currentCart, { ...item, quantity: 1 }] })
-    }
-  },
-
-  removeFromCart: (id) => {
-    const currentCart = get().cart
-    const item = currentCart.find((i) => i.id === id)
-    
-    if (item && item.quantity > 1) {
-      set({
-        cart: currentCart.map((i) =>
-          i.id === id ? { ...i, quantity: i.quantity - 1 } : i
-        ),
-      })
-    } else {
-      set({ cart: currentCart.filter((i) => i.id !== id) })
-    }
-  },
-
-  clearCart: () => set({ cart: [] }),
-
-  totalPrice: () => {
-    return get().cart.reduce((total, item) => total + item.price * item.quantity, 0)
-  },
-}))
+          if (existingItemIndex > -1) {
+            const newCart = [...state.cart]
+            newCart[existingItemIndex].quantity += 1
+            return { cart: newCart }
+          }
+          return { cart: [...state.cart, { ...newItem, quantity: 1 }] }
+        }),
+      removeFromCart: (id) =>
+        set((state) => ({
+          cart: state.cart.filter((item) => item.id !== id),
+        })),
+      clearCart: () => set({ cart: [] }),
+    }),
+    { name: 'food-stall-cart' } // This saves the cart in the browser's LocalStorage
+  )
+)

@@ -1,6 +1,7 @@
 import './globals.css'
 import { Oswald, Montserrat } from 'next/font/google'
 import Navbar from '@/components/Navbar'
+import Cart from '@/components/Cart'
 
 //font variables
 const oswald = Oswald({ 
@@ -26,6 +27,7 @@ export default function RootLayout({
           <Navbar />
           <main className="flex-1">
             {children}
+            <Cart />
           </main>
         </div>
       </body>

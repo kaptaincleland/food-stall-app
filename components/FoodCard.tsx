@@ -24,10 +24,14 @@ export default function FoodCard({ item,dbExtras }: { item: any, dbExtras: any[]
 
   const handleAddToCart = () => {
     setIsAdding(true)
+    const extraNames = selectedExtras
+    .map(id => dbExtras.find(e => e.id === id)?.name)
+    .filter(Boolean)
+    const displayName = `${item.name}${extraNames.length > 0 ? ` (${extraNames.join(', ')})` : ''}`
     addToCart({ 
       ...item, 
       price: finalPrice,
-      name: `${item.name} ${selectedExtras.length > 0 ? `(+ ${selectedExtras.join(', ')})` : ''}`
+      name: displayName
     })
     setTimeout(() => setIsAdding(false), 1000) 
   }
@@ -55,7 +59,7 @@ export default function FoodCard({ item,dbExtras }: { item: any, dbExtras: any[]
         {/* --- waakye--- */}
         {item.is_flexible && (
           <div className="mb-6 p-4 bg-orange-50 rounded-2xl border border-orange-100">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-orange-600 block mb-3">Base Waakye Amount</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-orange-600 block mb-3">Base Food Amount</span>
             <div className="flex items-center justify-between bg-white p-2 rounded-xl shadow-sm">
               <button type='button' className="h-8 w-8 rounded-lg bg-orange-500 text-white font-bold" 
                 onClick={() => setCustomPrice((prev: number) => Math.max(item.price, prev - 1))}>-</button>
@@ -67,7 +71,7 @@ export default function FoodCard({ item,dbExtras }: { item: any, dbExtras: any[]
         )}
 
         {/* --- extras --- */}
-      {dbExtras && dbExtras.length > 0 && (
+      {(!item.category_slug.includes('waakye-main')) && dbExtras && dbExtras.length > 0 && (
         <div className="relative mb-8">
           <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block mb-4 text-center">
             Add Toppings

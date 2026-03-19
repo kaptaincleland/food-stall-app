@@ -6,7 +6,7 @@ export default async function MenuPage() {
 const supabase = await createClient()
   const { count: friedRiceCount } = await supabase.from('menu_items').select('*', { count: 'exact', head: true }).eq('category_slug', 'fried-rice')
   const { count: jollofCount } = await supabase.from('menu_items').select('*', { count: 'exact', head: true }).eq('category_slug', 'jollof')
-  const { count: waakyeCount } = await supabase.from('menu_items').select('*', { count: 'exact', head: true }).eq('category_slug', 'waakye')
+  const { count: waakyeCount } = await supabase.from('menu_items').select('*', { count: 'exact', head: true }).or('category_slug.eq.waakye,category_slug.eq.waakye-main')
   const { count: riceCount } = await supabase.from('menu_items').select('*', { count: 'exact', head: true }).eq('category_slug', 'plain-rice')
   const { count: yamCount } = await supabase.from('menu_items').select('*', { count: 'exact', head: true }).eq('category_slug', 'yam')
 
@@ -43,7 +43,7 @@ const categories = [
               />
               
               {/* Dark Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
 
               {/* Text Content */}
               <div className="absolute bottom-8 left-8">

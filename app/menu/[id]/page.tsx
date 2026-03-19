@@ -10,7 +10,7 @@ export default async function CategoryPage({ params }: { params: { id: string } 
   const { data: items, error } = await supabase
     .from('menu_items')
     .select('*')
-    .eq('category_slug', id) 
+    .or(`category_slug.eq.${id},category_slug.eq.${id}-main`)
     .order('price', { ascending: false })
 
   //fetching extras for db
@@ -19,7 +19,7 @@ export default async function CategoryPage({ params }: { params: { id: string } 
     .select('food_extras(id,name,price)')
     .eq('category_slug', id)
 
-  const availableExtras = extras? extras.map((e: any) => e.food_extras).filter(Boolean) .sort((a: any, b: any) => a.price - b.price): [];
+  const availableExtras = extras? extras.map((e: any) => e.food_extras).filter(Boolean) .sort((a: any, b: any) => b.price - a.price): [];
   return (
     <main className="p-6 md:p-12">
       <div className="max-w-7xl mx-auto">
